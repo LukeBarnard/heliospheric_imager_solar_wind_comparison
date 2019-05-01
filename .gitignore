@@ -1,0 +1,14 @@
+# Compiled python modules.
+*.pyc
+
+# Setuptools distribution folder.
+/dist/
+
+# Python egg metadata, regenerated from source files by setuptools.
+/*.egg-info
+
+#Local HI1a data directory, as too large
+/data/hi1a
+
+# CSV data files, as these are computed from other lower level data files
+/data/*.csv

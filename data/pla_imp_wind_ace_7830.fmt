@@ -1,0 +1,19 @@
+  FORMAT OF THE SUBSETTED FILE
+    
+    ITEMS                      FORMAT   
+     
+ 1 Year                          I4        
+ 2 Day                           I4        
+ 3 Hour                          I3        
+ 4 WIND KP Speed, km/s           I6        
+ 5 WIND KP flow azimuth, deg.    F6.1      
+ 6 WIND KP flow elev., deg.      F6.1      
+ 7 WIND KP Density, N/cm^3       F6.1      
+ 8 WIND KP Temperature, K        F9.0      
+ 9 WIND KP sigma-V, km/s         I6        
+10 WIND KP sigma-Az. V, deg.     F6.1      
+11 WIND KP sigma-El. V, deg.     F6.1      
+12 WIND KP sigma-N, N/cm^3       F6.1      
+13 WIND KP sigma-T,K             F9.0      
+
+This file was produced by SPDF OMNIWeb Plus service

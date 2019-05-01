@@ -1,0 +1,9 @@
+root,C:\Users\yq904481\PyCharmProjects\heliospheric_imager_solar_wind_comparison
+code,code
+figs,figures
+data,data
+wind_sw_data,data\pla_imp_wind_ace_7830.lst
+wind_ephemeris_data,data\wind_ephemeris_gse.txt
+sta_sw_data,data\stereoa_7421.lst
+stb_sw_data,data\stereob_7482.lst
+sta_hi_data,data\sta_HI1_flow_stats_20080101_20121231.hdf5
