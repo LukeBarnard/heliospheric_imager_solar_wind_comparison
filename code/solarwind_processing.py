@@ -25,7 +25,7 @@ def project_info():
     :return proj_dirs: Dictionary of project directories, with keys 'data','figures','code', and 'results'.
     """
     files = glob.glob('config.txt')
-
+    
     if len(files) != 1:
         # If too few or too many config files, guess projdirs
         print('Error: Cannot find correct config file with project directories. Check config.txt exists')

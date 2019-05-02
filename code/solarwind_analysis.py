@@ -17,8 +17,14 @@ from stereo_spice.coordinates import StereoSpice
 import heliospheric_imager_analysis.images as hip
 import solarwind_processing as swp
 
+# Get stereo_spice instance for later.
 spice = StereoSpice()
 
+# Configure defaults for matplotlib
+mpl.rc("axes", labelsize=14)
+mpl.rc("ytick", labelsize=13)
+mpl.rc("xtick", labelsize=13)
+mpl.rc("legend", fontsize=13)
 
 def import_solar_wind_plasma_data(t_start="2008-01-01T00:00:00", t_stop="2012-12-31T23:59:59"):
     """
@@ -63,7 +69,7 @@ def insitu_time_series_acf():
     acf_opts['do_sig'] = True
     acf_opts['iters'] = 1000
 
-    fig, ax, axl, axr = swp.setup_time_series_acf_figure()
+    fig, ax, axl, axr = setup_time_series_acf_figure()
     craft_cols = swp.get_craft_colors()
 
     # Now load in the in-situ data. take daily means. compute spearman acf and sig. plot.
@@ -166,7 +172,7 @@ def HI_time_series_acf():
     acf_opts['do_sig'] = True
     acf_opts['iters'] = 1000
 
-    fig, ax, axl, axr = swp.setup_time_series_acf_figure()
+    fig, ax, axl, axr = setup_time_series_acf_figure()
     pa_cols = swp.get_pa_colors()
 
     # Plot out variability for all position angles
@@ -1002,7 +1008,12 @@ def HI_processing_schematic():
     fig.savefig(out_path)
     return
 
+
 def setup_time_series_acf_figure():
+    """
+    Setup the figure and axes for the time series and acf plots.
+    :return fig, ax, axl, axr: handles to the figure, all axes, left hand axes and right hand axes
+    """
     fig = plt.figure(figsize=(15, 10))
     ax1a = plt.subplot2grid((3, 4), (0, 0), colspan=3)
     ax1b = plt.subplot2grid((3, 4), (0, 3), colspan=1)
