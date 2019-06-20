@@ -207,7 +207,7 @@ def HI_time_series_acf():
     # Now plot out variability along a PA track similar to a in-situ monitor.
     situ = swp.load_wind_data()
     situ_avg = swp.situ_daily_averaging(situ)
-    axl[0].plot(situ_avg['days'], situ_avg['pa'], '-.', color=pa_cols[1], linewidth=2)
+    axl[0].plot(situ_avg['days'], situ_avg['pa'], '-.', color=pa_cols[2], linewidth=2)
     # compute variability along this track.
     var_track = np.zeros(situ_avg.shape[0]) * np.NaN
     for i, row in situ_avg.iterrows():
@@ -216,7 +216,7 @@ def HI_time_series_acf():
         if id_day.size != 0:
             var_track[i] = data_avg[id_pa, id_day]
 
-    axl[2].plot(situ_avg['days'], var_track, '-', color=pa_cols[1])
+    axl[2].plot(situ_avg['days'], var_track, '-', color=pa_cols[2])
     # Compute acf of the track variability.
     situ_avg['hi_var'] = var_track
     lags_track, acf_track, acf_track_sig = swp.compute_situ_acf(situ_avg, 'hi_var', acf_opts=acf_opts)
@@ -579,6 +579,8 @@ def lagged_correlation():
     out_path = os.path.join(proj_dirs['figs'], out_name)
     fig.savefig(out_path)
 
+    #TODO Break this second plot into a seperate function, saving lag_corr_stats into a aux file.
+
     # Scatter plot of lag vs yr
     fig, ax = plt.subplots(figsize=(7, 6))
     craft_cols = swp.get_craft_colors()
@@ -587,23 +589,27 @@ def lagged_correlation():
     years = (np.arange(2008, 2013, 1)) + 0.5 - 2008
 
     for i, craft in enumerate(['WIND', 'STA', 'STB']):
-        x = lag_corr_stats[:, 0, i]
+
+        # Plot all points of lag of minimum correlation vs year
         y = lag_corr_stats[:, 1, i]
         ax.plot(years, y, linestyle='None', marker=craft_mkr[i], color=craft_cols[i], label=craft.upper())
-        slope, intercept, r_value, p_value, std_err = st.linregress(years, y)
-        print "{}: Gradient: {} +/- {}".format(craft, slope, std_err)
-        ax.plot(years, intercept + slope * years, '-', color=craft_cols[i])
-        ax.plot(years, intercept + (slope - 2 * std_err) * years, '--', color=craft_cols[i])
-        ax.plot(years, intercept + (slope + 2 * std_err) * years, '--', color=craft_cols[i])
-        # Add in another case to exclude outlying STA point in 2012.
-        if craft == 'STA':
+
+        # Fit least squares regression to this, excluding an outliet for STA.
+        if craft in ["WIND", "STB"]:
+            slope, intercept, r_value, p_value, std_err = st.linregress(years, y)
+            print "{}: Gradient: {} +/- {}".format(craft, slope, std_err)
+            ax.plot(years, intercept + slope * years, '-', color=craft_cols[i])
+            ax.plot(years, intercept + (slope - 2 * std_err) * years, '--', color=craft_cols[i])
+            ax.plot(years, intercept + (slope + 2 * std_err) * years, '--', color=craft_cols[i])
+        elif craft == 'STA':
+            # Special case to exclude outlying STA point in 2012.
             years_sub = years[:-1]
             y_sub = y[:-1]
             slope, intercept, r_value, p_value, std_err = st.linregress(years_sub, y_sub)
             print "{}: Gradient (no outlier): {} +/- {}".format(craft, slope, std_err)
-            ax.plot(years_sub, intercept + slope * years_sub, ':', color=craft_cols[i])
-            ax.plot(years_sub, intercept + (slope - 2 * std_err) * years_sub, '-.', color=craft_cols[i])
-            ax.plot(years_sub, intercept + (slope + 2 * std_err) * years_sub, '-.', color=craft_cols[i])
+            ax.plot(years_sub, intercept + slope * years_sub, '-', color=craft_cols[i])
+            ax.plot(years_sub, intercept + (slope - 2 * std_err) * years_sub, '--', color=craft_cols[i])
+            ax.plot(years_sub, intercept + (slope + 2 * std_err) * years_sub, '--', color=craft_cols[i])
 
     ax.legend(fontsize=14)
     ax.set_xlabel('Years since 2008-01-01', fontsize=14)
